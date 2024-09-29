@@ -7,42 +7,30 @@
     <script>
         const personalAccessToken = 'patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5'; // Your Airtable personal access token
         const baseId = 'appB5rcjMWKBR3VEx'; // Your Airtable base ID
-        const tableId = 'tblpW7s9SsqKPtgtE'; // Your Airtable table ID
+        const tableName = 'Mongs'; // Your Airtable table name
         const recordId = 'recnbYjhMTeR18RB0'; // Your record ID
 
-        // Function to update likes/dislikes
+        // Function to update Likes or Dislikes
         async function updateVote(voteType) {
             try {
-                // Fetch current record data to get existing counts
-                const currentDataResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Mongs/${recordId}`, {
-                    headers: {
-                        Authorization: `Bearer ${personalAccessToken}`,
+                // Prepare the data to update Likes or Dislikes
+                const updateData = {
+                    fields: {
+                        [voteType]: true // or any value based on your requirements
                     }
-                });
+                };
 
-                if (!currentDataResponse.ok) {
-                    const errorResponse = await currentDataResponse.json();
-                    console.error('Error fetching current data:', errorResponse);
-                    throw new Error(`HTTP error while fetching current data! status: ${currentDataResponse.status}`);
-                }
-
-                const currentData = await currentDataResponse.json();
-                const currentCount = currentData.fields[voteType] || 0; // Get the current count or default to 0
-
-                // Update the record with the incremented count
-                const updateResponse = await fetch(`https://api.airtable.com/v0/${baseId}/Mongs/${recordId}`, {
+                // Make the PATCH request to update the record
+                const updateResponse = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}/${recordId}`, {
                     method: 'PATCH',
                     headers: {
                         Authorization: `Bearer ${personalAccessToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        fields: {
-                            [voteType]: currentCount + 1 // Increment the current count
-                        }
-                    })
+                    body: JSON.stringify(updateData)
                 });
 
+                // Check for errors in the response
                 if (!updateResponse.ok) {
                     const errorResponse = await updateResponse.json();
                     console.error('Error updating votes:', errorResponse);
@@ -50,7 +38,7 @@
                 }
 
                 const updatedData = await updateResponse.json();
-                console.log(updatedData);
+                console.log('Updated Data:', updatedData);
             } catch (error) {
                 console.error('Error updating votes:', error);
             }
@@ -59,10 +47,10 @@
         // Example usage
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('likeBtn').onclick = function() {
-                updateVote('Likes'); // Update likes
+                updateVote('Likes'); // Update Likes
             };
             document.getElementById('dislikeBtn').onclick = function() {
-                updateVote('Dislikes'); // Update dislikes
+                updateVote('Dislikes'); // Update Dislikes
             };
         });
     </script>
