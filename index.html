@@ -1,102 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Like Counter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        .like-count {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .like-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Like/Dislike Counter</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="main.js" defer></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-
-    <h1>Like Counter</h1>
-    <div class="like-count" id="likeCount">Likes: 0</div>
-    <button class="like-button" id="likeBtn">Like</button>
-
-    <script>
-        const apiKey = 'patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5'; // Your Airtable personal access token
-        const baseId = 'appB5rcjMWKBR3VEx'; // Your Airtable base ID
-        const tableId = 'tblpW7s9SsqKPtgtE'; // Your Airtable table ID
-        const recordId = 'recnbYjhMTeR18RB0'; // Your Airtable record ID
-        const airtableEndpoint = `https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`;
-
-        async function fetchRecord() {
-            try {
-                const response = await fetch(airtableEndpoint, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.fields; // Returns the fields of the record
-            } catch (error) {
-                console.error("Error fetching record:", error.message);
-            }
-        }
-
-        async function updateLikeCount() {
-            try {
-                // Fetch the current like count first
-                const currentRecord = await fetchRecord(); // Call to fetch current record
-                const currentCount = currentRecord.Likes || 0; // Default to 0 if undefined
-                const newCount = currentCount + 1; // Increment like count by 1
-
-                const response = await fetch(airtableEndpoint, {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "fields": {
-                            "Likes": newCount
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                console.log("Updated like count:", result);
-                document.getElementById('likeCount').innerText = `Likes: ${newCount}`; // Update display
-            } catch (error) {
-                console.error("Error updating like count:", error.message);
-            }
-        }
-
-        // Initial fetch to display current like count
-        fetchRecord().then(fields => {
-            const initialCount = fields.Likes || 0;
-            document.getElementById('likeCount').innerText = `Likes: ${initialCount}`;
-        });
-
-        // Event listener for like button
-        document.getElementById('likeBtn').onclick = updateLikeCount;
-
-    </script>
-
+	<div class="post" data-post-id="7712">
+		<img class="post-image" src="https://placehold.co/600x400" alt="Post Image">
+		<div class="post-ratings-container">
+			<div class="post-rating">
+				<span class="post-rating-button material-icons">thumb_up</span>
+				<span class="post-rating-count">0</span>
+			</div>
+			<div class="post-rating">
+				<span class="post-rating-button material-icons">thumb_down</span>
+				<span class="post-rating-count">0</span>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
+main.css
