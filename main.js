@@ -32,6 +32,7 @@ document.querySelectorAll(".post").forEach(post => {
             // Airtable API configuration
             const apiKey = 'patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5'; // Your Airtable personal access token
             const baseId = 'appB5rcjMWKBR3VEx'; // Your Airtable base ID
+            const recordId = 'recnbYjhMTeR18RB0';
             const tableId = 'tblpW7s9SsqKPtgtE'; // Your Airtable table ID
             const airtableEndpoint = `https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`; // Construct Airtable endpoint
 
