@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airtable Voting Example</title>
     <script>
-        const apiKey = 'YOUR_API_KEY_HERE'; // Your Airtable personal access token
+        const personalAccessToken = 'patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5'; // Your Airtable personal access token
         const baseId = 'appB5rcjMWKBR3VEx'; // Your Airtable base ID
         const tableId = 'tblpW7s9SsqKPtgtE'; // Your Airtable table ID
         const recordId = 'recnbYjhMTeR18RB0'; // Your record ID
@@ -16,7 +16,7 @@
                 // Fetch current record data to get existing counts
                 const currentDataResponse = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
                     headers: {
-                        Authorization: `Bearer ${apiKey}`,
+                        Authorization: `Bearer ${personalAccessToken}`,
                     }
                 });
 
@@ -31,7 +31,7 @@
                 const updateResponse = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
                     method: 'PATCH',
                     headers: {
-                        Authorization: `Bearer ${apiKey}`,
+                        Authorization: `Bearer ${personalAccessToken}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
