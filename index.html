@@ -19,7 +19,7 @@
                 },
                 body: JSON.stringify({
                     fields: {
-                        Likes: +1 // Update with the new like count
+                        Likes: count.textContent = Number (count.textContent) + 1 // Update with the new like count
                     }
                 })
             });
