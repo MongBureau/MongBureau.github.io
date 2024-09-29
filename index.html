@@ -13,32 +13,20 @@
         // Function to update likes/dislikes
         async function updateVote(voteType) {
             try {
-                // Fetch current record data to get existing counts
-                const currentDataResponse = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
-                    headers: {
-                        Authorization: `Bearer ${personalAccessToken}`,
-                    }
-                });
+                // Prepare the data to be updated
+                const updateData = {
+                    fields: {}
+                };
+                updateData.fields[voteType] = { increment: 1 }; // Increment the current count
 
-                if (!currentDataResponse.ok) {
-                    throw new Error(`HTTP error while fetching current data! status: ${currentDataResponse.status}`);
-                }
-
-                const currentData = await currentDataResponse.json();
-                const currentCount = currentData.fields[voteType] || 0; // Get the current count or default to 0
-
-                // Update the record with the incremented count
+                // Update the record
                 const updateResponse = await fetch(`https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`, {
                     method: 'PATCH',
                     headers: {
                         Authorization: `Bearer ${personalAccessToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        fields: {
-                            [voteType]: currentCount + 1 // Increment the current count
-                        }
-                    })
+                    body: JSON.stringify(updateData)
                 });
 
                 if (!updateResponse.ok) {
@@ -70,4 +58,3 @@
 <button id="dislikeBtn">👎 Dislike</button>
 
 </body>
-</html>
