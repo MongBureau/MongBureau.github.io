@@ -1,7 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Like/Dislike Feature</title>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .btn-like {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-dislike {
+            background-color: #f44336;
+            color: white;
+        }
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="button-container">
+        <button id="likeBtn" class="btn btn-like">👍 Like (<span id="likeCount">0</span>)</button>
+        <button id="dislikeBtn" class="btn btn-dislike">👎 Dislike (<span id="dislikeCount">0</span>)</button>
+    </div>
+
+    <script>
+        // Initialize counts
+        let likeCount = localStorage.getItem('likeCount') || 0;
+        let dislikeCount = localStorage.getItem('dislikeCount') || 0;
+        let userVoted = localStorage.getItem('userVoted') || null;
+
+        // Update counts in the DOM
+        document.getElementById('likeCount').textContent = likeCount;
+        document.getElementById('dislikeCount').textContent = dislikeCount;
+
+        // Check if the user already voted
+        if (userVoted) {
+            disableButtons();
+        }
+
+        // Like button click event
+        document.getElementById('likeBtn').addEventListener('click', function () {
+            if (!userVoted) {
+                likeCount++;
+                localStorage.setItem('likeCount', likeCount);
+                localStorage.setItem('userVoted', 'liked');
+                updateCounts();
+                disableButtons();
+            }
+        });
+
+        // Dislike button click event
+        document.getElementById('dislikeBtn').addEventListener('click', function () {
+            if (!userVoted) {
+                dislikeCount++;
+                localStorage.setItem('dislikeCount', dislikeCount);
+                localStorage.setItem('userVoted', 'disliked');
+                updateCounts();
+                disableButtons();
+            }
+        });
+
+        // Function to update like/dislike counts
+        function updateCounts() {
+            document.getElementById('likeCount').textContent = likeCount;
+            document.getElementById('dislikeCount').textContent = dislikeCount;
+        }
+
+        // Function to disable the buttons after voting
+        function disableButtons() {
+            document.getElementById('likeBtn').classList.add('disabled');
+            document.getElementById('likeBtn').disabled = true;
+            document.getElementById('dislikeBtn').classList.add('disabled');
+            document.getElementById('dislikeBtn').disabled = true;
+        }
+    </script>
 </body>
 </html>
