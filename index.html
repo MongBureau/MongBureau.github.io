@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,9 +25,8 @@
             background-color: #f44336;
             color: white;
         }
-        .disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .active {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
@@ -38,54 +37,80 @@
     </div>
 
     <script>
-        // Initialize counts
-        let likeCount = localStorage.getItem('likeCount') || 0;
-        let dislikeCount = localStorage.getItem('dislikeCount') || 0;
+        // Initialize counts and user vote state
+        let likeCount = parseInt(localStorage.getItem('likeCount')) || 0;
+        let dislikeCount = parseInt(localStorage.getItem('dislikeCount')) || 0;
         let userVoted = localStorage.getItem('userVoted') || null;
 
         // Update counts in the DOM
         document.getElementById('likeCount').textContent = likeCount;
         document.getElementById('dislikeCount').textContent = dislikeCount;
 
-        // Check if the user already voted
-        if (userVoted) {
-            disableButtons();
+        // Set button state if user has already voted
+        if (userVoted === 'liked') {
+            document.getElementById('likeBtn').classList.add('active');
+        } else if (userVoted === 'disliked') {
+            document.getElementById('dislikeBtn').classList.add('active');
         }
 
         // Like button click event
         document.getElementById('likeBtn').addEventListener('click', function () {
-            if (!userVoted) {
+            if (userVoted === 'liked') {
+                // If already liked, remove the vote
+                likeCount--;
+                localStorage.removeItem('userVoted');
+                userVoted = null;
+                document.getElementById('likeBtn').classList.remove('active');
+            } else {
+                // If switching from dislike, decrease dislike count
+                if (userVoted === 'disliked') {
+                    dislikeCount--;
+                    document.getElementById('dislikeBtn').classList.remove('active');
+                }
+                // Cast like vote
                 likeCount++;
-                localStorage.setItem('likeCount', likeCount);
                 localStorage.setItem('userVoted', 'liked');
-                updateCounts();
-                disableButtons();
+                userVoted = 'liked';
+                document.getElementById('likeBtn').classList.add('active');
+                document.getElementById('dislikeBtn').classList.remove('active');
             }
+            // Update the counts in localStorage and the DOM
+            localStorage.setItem('likeCount', likeCount);
+            localStorage.setItem('dislikeCount', dislikeCount);
+            updateCounts();
         });
 
         // Dislike button click event
         document.getElementById('dislikeBtn').addEventListener('click', function () {
-            if (!userVoted) {
+            if (userVoted === 'disliked') {
+                // If already disliked, remove the vote
+                dislikeCount--;
+                localStorage.removeItem('userVoted');
+                userVoted = null;
+                document.getElementById('dislikeBtn').classList.remove('active');
+            } else {
+                // If switching from like, decrease like count
+                if (userVoted === 'liked') {
+                    likeCount--;
+                    document.getElementById('likeBtn').classList.remove('active');
+                }
+                // Cast dislike vote
                 dislikeCount++;
-                localStorage.setItem('dislikeCount', dislikeCount);
                 localStorage.setItem('userVoted', 'disliked');
-                updateCounts();
-                disableButtons();
+                userVoted = 'disliked';
+                document.getElementById('dislikeBtn').classList.add('active');
+                document.getElementById('likeBtn').classList.remove('active');
             }
+            // Update the counts in localStorage and the DOM
+            localStorage.setItem('likeCount', likeCount);
+            localStorage.setItem('dislikeCount', dislikeCount);
+            updateCounts();
         });
 
         // Function to update like/dislike counts
         function updateCounts() {
             document.getElementById('likeCount').textContent = likeCount;
             document.getElementById('dislikeCount').textContent = dislikeCount;
-        }
-
-        // Function to disable the buttons after voting
-        function disableButtons() {
-            document.getElementById('likeBtn').classList.add('disabled');
-            document.getElementById('likeBtn').disabled = true;
-            document.getElementById('dislikeBtn').classList.add('disabled');
-            document.getElementById('dislikeBtn').disabled = true;
         }
     </script>
 </body>
