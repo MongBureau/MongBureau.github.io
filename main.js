@@ -1,5 +1,5 @@
 document.querySelectorAll(".post").forEach(post => {
-    const recordId = post.dataset.recordId; // Get the Airtable record ID
+    const recordId = 'recnbYjhMTeR18RB0'; // Your Airtable record ID
     const ratings = post.querySelectorAll(".post-rating");
     const likeRating = ratings[0];
 
@@ -9,18 +9,16 @@ document.querySelectorAll(".post").forEach(post => {
 
         button.addEventListener("click", async () => {
             if (rating.classList.contains("post-rating-selected")) {
-                return; // Already selected, do nothing
+                return; // Already selected, no action needed
             }
 
-            // Increment count for the selected rating
+            // Increment the clicked rating's count
             count.textContent = Number(count.textContent) + 1;
 
-            // Remove selection from previously selected rating
+            // Deselect any previously selected rating and decrement its count
             ratings.forEach(rating => {
                 if (rating.classList.contains("post-rating-selected")) {
                     const count = rating.querySelector(".post-rating-count");
-
-                    // Decrement the previous rating count
                     count.textContent = Math.max(0, Number(count.textContent) - 1);
                     rating.classList.remove("post-rating-selected");
                 }
@@ -31,31 +29,36 @@ document.querySelectorAll(".post").forEach(post => {
 
             const likeOrDislike = likeRating === rating ? "like" : "dislike";
 
+            // Airtable API configuration
+            const apiKey = 'patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5'; // Your Airtable personal access token
+            const baseId = 'appB5rcjMWKBR3VEx'; // Your Airtable base ID
+            const tableId = 'tblpW7s9SsqKPtgtE'; // Your Airtable table ID
+            const airtableEndpoint = `https://api.airtable.com/v0/${baseId}/${tableId}/${recordId}`; // Construct Airtable endpoint
+
             try {
-                // Fetch the current like/dislike count from Airtable
-                const response = await fetch(`https://api.airtable.com/v0/appB5rcjMWKBR3VEx/tblpW7s9SsqKPtgtE/${recordId}`, {
+                // Fetch the current like/dislike count for the post
+                const response = await fetch(airtableEndpoint, {
                     method: "GET",
                     headers: {
-                        Authorization: `Bearer patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5`,
+                        Authorization: `Bearer ${apiKey}`,
                         "Content-Type": "application/json"
                     }
                 });
                 const record = await response.json();
 
-                // Get the current like/dislike count from the Airtable record
                 const currentLikes = record.fields.Likes || 0;
                 const currentDislikes = record.fields.Dislikes || 0;
 
-                // Update Airtable based on user interaction
+                // Update Airtable based on the interaction
                 const updatedFields = {
                     Likes: likeOrDislike === "like" ? currentLikes + 1 : currentLikes,
                     Dislikes: likeOrDislike === "dislike" ? currentDislikes + 1 : currentDislikes
                 };
 
-                await fetch(`https://api.airtable.com/v0/appB5rcjMWKBR3VEx/tblpW7s9SsqKPtgtE/${recordId}`, {
+                await fetch(airtableEndpoint, {
                     method: "PATCH",
                     headers: {
-                        Authorization: `Bearer patF168MAz3MesHoR.516feaa589f87ba8582af184a19fe1f7899148caf48f2d0c7fa8ead6173093d5`,
+                        Authorization: `Bearer ${apiKey}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ fields: updatedFields })
