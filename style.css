@@ -1,0 +1,37 @@
+#voting-widget {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.vote-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.vote-button:hover {
+    transform: scale(1.1);
+}
+
+.vote-button .icon {
+    font-size: 24px;
+}
+
+.vote-button span:last-child {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.vote-button.active {
+    color: #007bff;
+}
