@@ -1,19 +1,44 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Audio Player</title>
 </head>
-<body style="margin:0; padding:0;">
-    <audio autoplay loop controls style="position: fixed; top: 0; left: 0;">
+<body>
+    <audio id="audio" loop>
         <source src="https://raw.githubusercontent.com/MongBureau/MongBureau.github.io/main/mao.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
     <script>
-        window.onload = function() {
-            var audio = document.querySelector('audio');
-            audio.play().catch(function(error) {
-                console.log("Audio playback failed:", error);
-            });
+        // Create multiple audio contexts and try to play
+        const audio = document.getElementById('audio');
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Try to play every 100ms for 5 seconds
+        let attempts = 0;
+        const maxAttempts = 50;
+        
+        function attemptPlay() {
+            audio.play()
+                .then(() => console.log('Playing!'))
+                .catch(() => {
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        setTimeout(attemptPlay, 100);
+                    }
+                });
         }
+
+        // Try different methods to force audio
+        window.onload = function() {
+            attemptPlay();
+            document.addEventListener('DOMContentLoaded', attemptPlay);
+            document.addEventListener('keydown', attemptPlay);
+            document.addEventListener('mousemove', attemptPlay);
+            document.addEventListener('touchstart', attemptPlay);
+            audioContext.resume();
+        }
+
+        // Keep trying to play if the tab becomes active
+        document.addEventListener('visibilitychange', attemptPlay);
     </script>
 </body>
 </html>
