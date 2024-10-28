@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting Widget</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Autoplay Music Widget</title>
 </head>
 <body>
-    <div id="voting-widget" data-post-id="7712">
-        <button id="like-button" class="vote-button">
-            <span class="icon">👍</span>
-            <span id="like-count">0</span>
-        </button>
-        <button id="dislike-button" class="vote-button">
-            <span class="icon">👎</span>
-            <span id="dislike-count">0</span>
-        </button>
-    </div>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="main.js"></script>
+    <audio autoplay loop>
+        <source src="mao.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Ensure the audio plays automatically
+        document.querySelector('audio').play().catch(function(error) {
+            console.log("Audio play failed:", error);
+        });
+    </script>
 </body>
 </html>
